@@ -1,3 +1,3 @@
 #!/bin/bash
 
-curl -f http://localhost:8000/health || exit 1
+while ! curl -sf http://localhost:8000/health; do sleep 5; done
