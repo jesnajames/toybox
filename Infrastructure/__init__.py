@@ -1,2 +1,2 @@
 from .exceptions import NotFoundException
-from .models import ToyModel
+from .models import ToyModel, ToyPurchaseModel

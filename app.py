@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI, HTTPException
-from Infrastructure import NotFoundException, ToyModel
+from Infrastructure import NotFoundException, ToyModel, ToyPurchaseModel
 from Query import ToyQueryProcessor
 from Command import ToyCommandProcessor
 from SampleResponse import toy_response
@@ -24,6 +24,7 @@ def get_toy(toy_id: str):
         raise HTTPException(status_code=nfe.error_code, detail=nfe.error_description)
     return {"message": toy}
 
+
 @app.post("/toys", status_code=200)
 def add_toy(toy: ToyModel):
     try:
@@ -32,7 +33,17 @@ def add_toy(toy: ToyModel):
         return {"message": "Updated successfully", "toy": new_toy}
     except Exception as exc:
         print(exc)
-    return {"message": "Something went wrong"}
+    return {"message": "Something went wrong", "payload": toy}
+
+
+@app.put("/toy", status_code=200)
+def buy_toy(toy_purchase: ToyPurchaseModel):
+    try:
+        response = ToyCommandProcessor.buy_toy(toy_purchase)
+        return {"message": "Purchased toy successfully", "response": response}
+    except Exception as exc:
+        print(exc)
+    return {"messaage": "Something went wrong", "payload": toy_purchase}
 
 
 if __name__ == "__main__":
