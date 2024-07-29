@@ -1,8 +1,8 @@
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from Infrastructure import NotFoundException, ToyModel, ToyPurchaseModel
-from Query import ToyQueryProcessor
-from Command import ToyCommandProcessor
+from ToyBoxQueries import ToyQueryProcessor
+from ToyBoxCommands import ToyCommandProcessor
 from SampleResponse import toy_response
 
 app = FastAPI(

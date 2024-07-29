@@ -2,6 +2,11 @@
 
 cd /home/ec2-user/toybox
 
+
+if [ -d "/home/ec2-user/toybox/Command" ]; then
+  rm -rf /home/ec2-user/toybox/Command
+fi
+
 sudo yum update -y
 
 sudo yum install -y python3
