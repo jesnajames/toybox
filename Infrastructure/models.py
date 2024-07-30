@@ -26,3 +26,12 @@ class ToyPurchaseModel(BaseModel):
     buyer_id: str
     selling_price: float
     purchase_timestamp: int = int(time.time())
+
+
+class User(BaseModel):
+    user_id: str
+    coordinates: str
+    first_name: str
+    last_name: str
+    phone_number: str
+    address: str

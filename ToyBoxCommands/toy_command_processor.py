@@ -1,5 +1,5 @@
 import random
-from Database.toys import all_toys
+from Database.db_connect import DBConnector
 from Infrastructure import ToyModel, ToyPurchaseModel, NotFoundException
 import traceback
 
@@ -9,8 +9,8 @@ class ToyCommandProcessor:
         try:
             toy_id = f"JP{random.randrange(200,500)}"
             toy.toy_id = toy_id
-            all_toys[toy_id] = dict(toy)
-            return all_toys[toy_id]
+            response = DBConnector().add_item("toys", dict(toy))
+            return toy
         except Exception as exc:
             print(exc, traceback.format_exc())
             return {}
@@ -19,15 +19,17 @@ class ToyCommandProcessor:
     def buy_toy(cls, toy_purchase: ToyPurchaseModel):
         try:
             toy_id = toy_purchase.toy_id
-            if toy_id not in all_toys:
+            current_toy = DBConnector().get_item("toys", "toy_id", toy_id)
+            if not current_toy:
                 raise NotFoundException(f"{toy_id} in not registered")
-            toy = all_toys[toy_id]
-            toy["available"] = False
-            toy["owner_id"] = toy_purchase.buyer_id
-            toy["mrp"] = toy_purchase.selling_price
-            # TODO update toy coordinates
-            all_toys.update({toy_id: toy})
-            return dict(toy)
+            current_toy["available"] = False
+            current_toy["owner_id"] = toy_purchase.buyer_id
+            current_toy["mrp"] = toy_purchase.selling_price
+
+            buyer = DBConnector().get_item("users", "user_id", toy_purchase.buyer_id)
+            current_toy["coordinates"] = buyer.get("coordinates", "")
+            DBConnector().update_item("toys", "toy_id", toy_id, current_toy)
+            return ToyModel(**current_toy)
         except Exception as exc:
             print(exc, traceback.format_exc())
             return {}
