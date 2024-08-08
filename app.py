@@ -27,6 +27,16 @@ def get_toy(toy_id: str):
 
 @app.post("/toys", status_code=200)
 def add_toy(toy: ToyModel):
+    """Adds a new toy to the database using ToyCommandProcessor.
+    Parameters:
+        - toy (ToyModel): The toy instance to be added.
+    Returns:
+        - dict: A dictionary with a message key indicating success or failure, and a toy key with the added toy details on success, or payload with the toy details on failure.
+    Processing Logic:
+        - The function prints a message before and after attempting to add a toy.
+        - It utilizes a try-except block to catch exceptions during the toy addition process.
+        - On success, a message of "Updated successfully" is returned with the toy instance added.
+        - On failure, a message of "Something went wrong" is returned with the original toy data."""
     try:
         print(f"Adding toy to DB")
         new_toy = ToyCommandProcessor.add_toy(toy)
